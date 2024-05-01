@@ -1,3 +1,21 @@
 .main-class {
     
 }
+
+.header {
+    font-size: 2em;
+}
+
+.content {
+    padding: 10px;
+}
+
+.separator {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.paragraph {
+    font-size: 1em;
+}
