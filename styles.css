@@ -1,21 +1,24 @@
 .main-class {
-    
+    padding: 10px;
 }
 
 .header {
     font-size: 2em;
+    margin: 10px
 }
 
 .content {
     padding: 10px;
+    text-align: justify;
 }
 
 .separator {
-    margin-top: 10px;
-    margin-bottom: 10px;
     font-size: 1.5em;
+    text-decoration: underline;
 }
 
 .paragraph {
+    margin-top: 10px;
+    margin-bottom: 10px;
     font-size: 1em;
 }
