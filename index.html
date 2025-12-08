@@ -1,15 +1,53 @@
-<html>
-    <head>
-        <title> Prasanna Koirala</title>
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div class="main-class">
-           <ul>
-            <li><a href="pages/may-1-2023-I-lost-my-phone-for-2-days.html"> I lost my phone for 2 days </a></li>
-           </ul>
-        </div>
-        <script type="text/javascript" src="index.js"></script> 
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prasanna Koirala - Portfolio</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Vue 3 -->
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+            "vue-router": "https://unpkg.com/vue-router@4/dist/vue-router.esm-browser.js",
+            "@vue/devtools-api": "https://unpkg.com/@vue/devtools-api@6.5.0/lib/esm/index.js"
+        }
+    }
+    </script>
+    <!-- Marked for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar">
+            <div class="nav-brand" @click="$router.push('/home')">PK</div>
+            <ul class="nav-links">
+                <router-link to="/home" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive }" @click="navigate">Home</li>
+                </router-link>
+                <router-link to="/blogs" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive || $route.path.startsWith('/blogs') }" @click="navigate">Blogs</li>
+                </router-link>
+                <router-link to="/projects" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive || $route.path.startsWith('/projects') }" @click="navigate">Projects</li>
+                </router-link>
+                <router-link to="/contact" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive }" @click="navigate">Contact</li>
+                </router-link>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <router-view></router-view>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 Prasanna Koirala. Built with Vue.js.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="js/index.js"></script>
+</body>
 </html>

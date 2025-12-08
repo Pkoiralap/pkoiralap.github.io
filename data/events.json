@@ -1,0 +1,22 @@
+[
+    {
+        "date": "2020-01-01",
+        "title": "Started University",
+        "folder": "2020-01-01-started-university"
+    },
+    {
+        "date": "2021-06-15",
+        "title": "First Internship",
+        "folder": "2021-06-15-first-internship"
+    },
+    {
+        "date": "2022-05-20",
+        "title": "Hackathon Winner",
+        "folder": "2022-05-20-hackathon-winner"
+    },
+    {
+        "date": "2023-01-10",
+        "title": "Graduation",
+        "folder": "2023-01-10-graduation"
+    }
+]

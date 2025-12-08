@@ -1,0 +1,9 @@
+[
+    {
+        "folder": "2023-09-15-portfolio-site",
+        "title": "Portfolio Website",
+        "date": "2023-09-15",
+        "summary": "Building this website from scratch.",
+        "technologies": ["Vue.js", "HTML", "CSS"]
+    }
+]

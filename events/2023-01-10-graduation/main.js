@@ -1,0 +1,1 @@
+console.log("Graduation event loaded");
