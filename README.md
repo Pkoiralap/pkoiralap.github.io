@@ -1,35 +1,33 @@
 # pkoiralap.github.io
-Personal website hosted on GitHub Pages.
+Personal website and interactive portfolio hosted on GitHub Pages.
 
 ## Project Structure
 
-- **index.html**: Main entry point.
-- **js/**: Contains Vue.js application logic.
+- **index.html**: Main SPA entry point and ES Module bootstrapper.
+- **js/**: Core application logic.
   - **index.js**: Router and app initialization.
-  - **events.js**: Data for the timeline on the Home page.
-  - **components/**: Vue components for each section.
-- **blogs/**: Markdown files for blog posts.
-- **projects/**: Markdown files for project descriptions.
-- **data/**: JSON indices for blogs and projects.
-- **styles.css**: Global styles.
+  - **utils.js**: The custom mounting engine (sandboxing, CSS scoping, script execution).
+  - **components/**: Vue components for each section (Timeline, Projects, Blogs).
+- **blogs/**: Markdown files for standard articles.
+- **projects/**: Fully isolated HTML/CSS/JS packages for interactive showcases.
+- **events/**: Isolated components for the interactive timeline.
+- **data/**: JSON indices driving the dynamic content.
+- **styles.css**: Global "Vintage Print" design system tokens.
 
 ## How to add content
 
 ### Adding a new Blog Post
-1. Create a new `.md` file in the `blogs/` folder. Name it using the format `YYYY-MM-DD-title.md`.
-2. Update `data/blogs.json` to include the new file's metadata:
-   ```json
-   {
-       "filename": "YYYY-MM-DD-title.md",
-       "title": "Your Title",
-       "date": "YYYY-MM-DD",
-       "summary": "Short summary..."
-   }
-   ```
+1. Create a new `.md` file in the `blogs/` folder. Name it: `YYYY-MM-DD-title.md`.
+2. Update `data/blogs.json` with metadata.
 
-### Adding a new Project
-1. Create a new `.md` file in the `projects/` folder.
-2. Update `data/projects.json` with the metadata.
+### Adding a new Project (Interactive Package)
+1. Create a new directory in `projects/` (e.g., `projects/YYYY-MM-DD-my-project/`).
+2. Include `main.html`, `style.css`, and `main.js`.
+3. Update `data/projects.json` to register the new project path.
 
-### Updating Timeline
-1. Edit `js/events.js` and add a new object to the list.
+### Adding a new Event (Interactive Component)
+1. Create a directory in `events/`.
+2. Include necessary assets and register in `data/events.json`.
+
+## Blogs
+Latest Post: [The "Website Inception": Why I built my portfolio this way](blogs/2026-06-13-website-inception.md) - A humorous dive into the architectural madness of this site.
