@@ -28,6 +28,3 @@ Personal website and interactive portfolio hosted on GitHub Pages.
 ### Adding a new Event (Interactive Component)
 1. Create a directory in `events/`.
 2. Include necessary assets and register in `data/events.json`.
-
-## Blogs
-Latest Post: [The "Website Inception": Why I built my portfolio this way](blogs/2026-06-13-website-inception.md) - A humorous dive into the architectural madness of this site.
