@@ -1,9 +1,23 @@
 [
     {
+        "folder": "2026-06-13-fire-simulator",
+        "title": "Fire Simulator",
+        "date": "2026-06-13",
+        "summary": "Fire simulator using C++ and SDL.",
+        "technologies": [
+            "C++",
+            "SDL"
+        ]
+    },
+    {
         "folder": "2023-09-15-portfolio-site",
         "title": "Portfolio Website",
         "date": "2023-09-15",
         "summary": "Building this website from scratch.",
-        "technologies": ["Vue.js", "HTML", "CSS"]
+        "technologies": [
+            "Vue.js",
+            "HTML",
+            "CSS"
+        ]
     }
 ]

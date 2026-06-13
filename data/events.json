@@ -1,22 +1,37 @@
 [
     {
-        "date": "2020-01-01",
-        "title": "Started University",
-        "folder": "2020-01-01-started-university"
+        "date": "Aug 2012",
+        "title": "B.E. in Computer Engineering",
+        "folder": "2012-08-tribhuvan-university"
     },
     {
-        "date": "2021-06-15",
-        "title": "First Internship",
-        "folder": "2021-06-15-first-internship"
+        "date": "Oct 2016",
+        "title": "Software Engineer at LogPoint",
+        "folder": "2016-10-logpoint"
     },
     {
-        "date": "2022-05-20",
-        "title": "Hackathon Winner",
-        "folder": "2022-05-20-hackathon-winner"
+        "date": "Jul 2018",
+        "title": "Course Instructor at TechAxis",
+        "folder": "2018-07-techaxis"
     },
     {
-        "date": "2023-01-10",
-        "title": "Graduation",
-        "folder": "2023-01-10-graduation"
+        "date": "Aug 2019 (MS)",
+        "title": "M.S. in Computer Science",
+        "folder": "2019-08-uah"
+    },
+    {
+        "date": "Aug 2019 (GRA)",
+        "title": "Graduate Research Assistant at NASA-IMPACT",
+        "folder": "2019-08-nasa-impact-gra"
+    },
+    {
+        "date": "Sep 2021",
+        "title": "Computer Scientist I at NASA-IMPACT",
+        "folder": "2021-09-nasa-impact-cs"
+    },
+    {
+        "date": "Apr 2022",
+        "title": "Senior Research Software Engineer at Vanderbilt",
+        "folder": "2022-04-vanderbilt"
     }
 ]

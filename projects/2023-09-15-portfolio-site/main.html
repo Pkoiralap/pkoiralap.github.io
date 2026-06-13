@@ -1,21 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Portfolio Website</title>
-</head>
-<body>
-    <h1>Portfolio Website</h1>
-    <p>This project hosts my personal portfolio.</p>
+<div class="project-card">
+    <div class="project-header">
+        <h1 class="project-title">Portfolio Architecture & Engineering Document</h1>
+        <div class="project-meta">
+            <span class="project-date">Sep 2023</span>
+        </div>
+    </div>
 
-    <h2>Tech Stack</h2>
-    <ul>
-        <li>Vue 3 (ESM)</li>
-        <li>CSS3</li>
-        <li>GitHub Pages</li>
-    </ul>
-    <script src="main.js"></script>
-</body>
-</html>
+    <div class="project-description">
+        <p class="lead-text">I engineered this platform as a zero-dependency, vanilla Single Page Application (SPA). My
+            goal was to create a "living" portfolio where each project isn't just a static image, but an isolated,
+            interactive micro-site that exists seamlessly within the larger shell.</p>
+
+        <!-- Section 1: Architectural Philosophy -->
+        <h2 class="section-title">1. Architectural Philosophy & Strategy</h2>
+        <p>When I started building this, I wanted to balance simplicity with raw technical power. This led me to three
+            distinct content strategies:</p>
+
+        <div class="component-block">
+            <h3>1.1 Blogs: Keeping it Simple</h3>
+            <p>I thought blogs are just blogs. They are meant for reading (if anyone decides to), so I kept them simple
+                and used markdown (MD) files for blogs. They are easy to write, easy to parse, that's it.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>1.2 Events: "Website inside of a Website" Experiment</h3>
+            <p>For the timeline events, I wanted to push the boundaries. I asked myself: <i>Can I render an entire
+                    website inside another website?</i> and thus, I started experimenting with a mounting system that
+                could fetch isolated HTML, CSS, and JS components and inject them into a sandboxed div. I used the
+                Events section as my testing ground to see if I could handle dynamic style scoping and script execution
+                without breaking the global state.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>1.3 Projects: A Successful Evolution</h3>
+            <p>The experiment worked! Once I saw it working, I brought that same technologia (I watch too many memes) to
+                the Projects section. This is why projects are fully isolated HTML, CSS, and JS packages. It allows me
+                to add cool Javascripts and custom CSS to better showcase the unique engineering of each project. For
+                example a D3.js architecture diagrams or interactive simulations. <b>How cool is that?</b> If I ever
+                create a game, you’ll be able to play it right here on my portfolio site, fully sandboxed.</p>
+            <p><i> Although, since the experiment worked, I might also move blogs to this format too, just to add more
+                    coolness factor. Eventually...</i></p>
+        </div>
+        <br>
+        <p>Below is an interactive flow diagram rendering the architectural dependencies and data flows that make this
+            "nested" execution possible.</p>
+
+        <div class="d3-container">
+            <div id="d3-architecture-canvas"></div>
+        </div>
+
+        <!-- Section 2: Core Components -->
+        <h2 class="section-title">2. Core Architectural Components</h2>
+
+        <div class="component-block">
+            <h3>2.1 The Mounting Layer (index.html)</h3>
+            <p>The entrypoint is a lightweight HTML5 shell. It avoids build steps by resolving dependencies via native
+                ES Modules. It loads the vintage typography stylesheet, imports Tailwind-free structural styling, and
+                defines the target mounting div:</p>
+            <pre class="code-box">&lt;div id="app"&gt;&lt;/div&gt;</pre>
+        </div>
+
+        <div class="component-block">
+            <h3>2.2 The Custom Engine (js/utils.js)</h3>
+            <p>This module acts as the core controller. When a dynamic component requests resources, `utils.js` triggers
+                a three-part fetching pipeline:</p>
+
+            <ul class="technical-list">
+                <li><strong>HTML Aggregator:</strong> Fetches and parses `main.html` into a document fragment, strips
+                    scripts/stylesheets to protect against runtime double-evaluation, and returns clean HTML content.
+                </li>
+                <li><strong>CSS Sandbox Scoper:</strong> Scopes subfolder stylesheets by parsing all rules and prefixing
+                    them with a unique container selector matching the parent ID (e.g., `#project-portfolio-site`). This
+                    blocks sub-component styles from polluting the global workspace scope.</li>
+                <li><strong>JS Executor:</strong> Safely runs isolated script modules (`main.js`) in the context of the
+                    mounted component using safe evaluation sandboxes.</li>
+            </ul>
+        </div>
+
+        <div class="component-block">
+            <h3>2.3 Scroll-Spy & Timeline (js/components/Timeline.js)</h3>
+            <p>The timeline implements an active vertical tracking system. The left column contains a timeline line with
+                node indicators. The right column renders the full event details loaded from event directories. The
+                scrolling state is synchronized via two mechanisms:</p>
+
+            <ul class="technical-list">
+                <li><strong>Passive Scroll Spy:</strong> A scroll event listener tracks the bounding client rect of all
+                    detail cards, measuring distance relative to 30% of the viewport height. The closest card is
+                    instantly marked active.</li>
+                <li><strong>Bottom-of-Page Protection:</strong> A threshold trigger detects when the user scrolls to the
+                    absolute bottom of the document and locks the active state to the oldest milestone, resolving native
+                    layout limits.</li>
+            </ul>
+        </div>
+
+        <div class="component-block">
+            <h3>2.4 Projects Loader (js/components/Projects.js)</h3>
+            <p>Manages listing and dynamic view transition for projects. Utilizing hash-routing parameters (e.g.,
+                `#/projects/portfolio-site`), it triggers the asset collection routine from the respective project
+                subdirectory and scopes styles using modern CSS `::marker` lists for clean typography alignment.</p>
+        </div>
+
+        <!-- Section 3: Styling Tokens -->
+        <h2 class="section-title">3. Design System & Aesthetics</h2>
+        <p>The website is styled using a "vintage print" design system, mimicking mid-century publication layouts with
+            ink-on-paper textures and flat layouts.</p>
+
+        <table class="tech-table">
+            <thead>
+                <tr>
+                    <th>Token Name</th>
+                    <th>Value / Rule</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Background</td>
+                    <td><code>#fdfdfc</code> (Parchment)</td>
+                    <td>Soft, low-contrast warm white to simulate vintage paper.</td>
+                </tr>
+                <tr>
+                    <td>Primary Ink</td>
+                    <td><code>#8c4327</code> (Terracotta)</td>
+                    <td>Warm earth-red accent ink, used for headings, dates, and borders.</td>
+                </tr>
+                <tr>
+                    <td>Secondary Ink</td>
+                    <td><code>#5c554c</code> (Charcoal)</td>
+                    <td>Dark gray ink for meta text, labels, and secondary tags.</td>
+                </tr>
+                <tr>
+                    <td>Body Copy</td>
+                    <td><code>#3c3530</code> (Carbon)</td>
+                    <td>Dark, high-readability text color for core body reading text.</td>
+                </tr>
+                <tr>
+                    <td>Serif Font</td>
+                    <td><code>'Fraunces', Georgia, serif</code></td>
+                    <td>Used for primary page titles, card headers, and project features.</td>
+                </tr>
+                <tr>
+                    <td>Mono Font</td>
+                    <td><code>'IBM Plex Mono', monospace</code></td>
+                    <td>Used for badge metadata, timestamps, code snippets, and stamps.</td>
+                </tr>
+                <tr>
+                    <td>Borders</td>
+                    <td><code>1px solid #d8d3c5</code></td>
+                    <td>Thin, warm-gray print borders bounding cards and buttons.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

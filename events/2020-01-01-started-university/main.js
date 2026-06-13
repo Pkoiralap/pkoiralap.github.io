@@ -1,1 +1,0 @@
-console.log("University event loaded");

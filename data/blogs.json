@@ -1,18 +1,12 @@
 [
     {
-        "folder": "2023-10-27-hello-world",
-        "title": "Hello World",
-        "date": "2023-10-27",
-        "summary": "My first blog post."
+        "filename": "2026-06-13-website-inception.md",
+        "title": "The \"Website Inception\": Why I built my portfolio this way",
+        "date": "2026-06-13",
+        "summary": "Diving into the 'website-within-a-website' architecture and the madness behind vanilla JS sandboxing."
     },
     {
-        "folder": "2023-11-01-learning-vue",
-        "title": "Learning Vue.js",
-        "date": "2023-11-01",
-        "summary": "Notes on setting up Vue 3."
-    },
-    {
-        "folder": "2023-05-01-lost-phone",
+        "filename": "2023-05-01-lost-phone.md",
         "title": "I lost my phone for 2 days",
         "date": "2023-05-01",
         "summary": "A story about losing a smartphone and rediscovering the laptop."

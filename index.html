@@ -18,6 +18,9 @@
     </script>
     <!-- Marked for Markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for code syntax highlighting in MD -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -27,11 +30,17 @@
                 <router-link to="/home" custom v-slot="{ navigate, isActive }">
                     <li :class="{ active: isActive }" @click="navigate">Home</li>
                 </router-link>
+                <router-link to="/timeline" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive || $route.path.startsWith('/timeline') }" @click="navigate">Timeline</li>
+                </router-link>
                 <router-link to="/blogs" custom v-slot="{ navigate, isActive }">
                     <li :class="{ active: isActive || $route.path.startsWith('/blogs') }" @click="navigate">Blogs</li>
                 </router-link>
                 <router-link to="/projects" custom v-slot="{ navigate, isActive }">
                     <li :class="{ active: isActive || $route.path.startsWith('/projects') }" @click="navigate">Projects</li>
+                </router-link>
+                <router-link to="/cv" custom v-slot="{ navigate, isActive }">
+                    <li :class="{ active: isActive || $route.path.startsWith('/cv') }" @click="navigate">CV</li>
                 </router-link>
                 <router-link to="/contact" custom v-slot="{ navigate, isActive }">
                     <li :class="{ active: isActive }" @click="navigate">Contact</li>

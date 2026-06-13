@@ -13,21 +13,27 @@ export default {
 
         const loadProjectContent = async (project) => {
             loading.value = true;
-            selectedProject.value = project || { html: '' };
             
             try {
-                const { html, css, js } = await loadResource(`projects/${project.folder}`);
+                const content = await loadResource(`projects/${project.folder}`);
                 const scopeId = `project-${project.folder.replace(/[^a-zA-Z0-9-]/g, '-')}`;
-                const scopedCss = scopeCss(css, scopeId);
-
-                selectedProject.value = { ...project, html, css: scopedCss, js, scopeId };
+                if (content.css) {
+                    const scopedCss = scopeCss(content.css, scopeId);
+                    injectStyles(`style-project-${project.folder}`, scopedCss);
+                }
                 
+                selectedProject.value = { 
+                    ...project, 
+                    html: content.html 
+                };
+
                 await nextTick();
-                injectStyles('dynamic-project-style', scopedCss);
-                executeScript(js);
+                if (content.js) {
+                    executeScript(content.js);
+                }
             } catch (error) {
                 console.error("Error loading project:", error);
-                selectedProject.value = { ...project, html: '<p>Error loading content.</p>' };
+                selectedProject.value = { ...project, html: '<p class="error-state">Error loading content.</p>' };
             } finally {
                 loading.value = false;
             }
@@ -54,8 +60,6 @@ export default {
 
         const backToList = () => {
             router.push('/projects');
-            const style = document.getElementById('dynamic-project-style');
-            if (style) style.remove();
             selectedProject.value = null;
         };
 
@@ -67,8 +71,6 @@ export default {
                 }
             } else {
                 selectedProject.value = null;
-                const style = document.getElementById('dynamic-project-style');
-                if (style) style.remove();
             }
         });
 
@@ -98,7 +100,7 @@ export default {
             <div v-else class="project-view">
                 <button @click="backToList" class="back-btn">&larr; Back to Projects</button>
                 <div v-if="loading">Loading...</div>
-                <div v-else class="dynamic-content-container" :id="selectedProject.scopeId">
+                <div v-else class="project-details-container" :id="'project-' + selectedProject.folder.replace(/[^a-zA-Z0-9-]/g, '-')">
                     <div v-html="selectedProject.html"></div>
                 </div>
             </div>

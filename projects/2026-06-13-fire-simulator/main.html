@@ -1,0 +1,192 @@
+<div class="project-card">
+    <div class="project-header">
+        <h1 class="project-title">Fire Simulator: Particle Dynamics & 3D Engine</h1>
+        <div class="project-meta">
+            <span class="project-date">Jun 2026</span>
+        </div>
+    </div>
+    
+    <div class="project-description">
+        <p class="lead-text">This project is a high-performance 3D fire simulation engine built from scratch using C++ and SDL. It implements a custom particle system with physical properties like velocity, lifetime, and intensity, rendered through a home-grown 3D rasterization pipeline featuring Z-buffering and geometric transformations.</p>
+
+        <div style="margin-bottom: 24px;">
+            <a href="https://github.com/Pkoiralap/Graphics" target="_blank" class="code-box" style="text-decoration: none; color: #8c4327; font-weight: bold; border-color: #8c4327;">
+                <svg style="vertical-align: middle; margin-right: 8px;" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill="#8c4327" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                VIEW SOURCE ON GITHUB
+            </a>
+        </div>
+
+        <!-- Section 1: System Architecture Diagram -->
+        <h2 class="section-title">1. System Architecture</h2>
+        <p>The engine is architected as a modular C++ system where core mathematical utilities support a specialized particle engine and a custom 3D renderer. Below is an interactive flow diagram rendering the architectural dependencies and data flows of the simulator.</p>
+        
+        <div class="d3-container">
+            <div id="d3-architecture-canvas"></div>
+        </div>
+
+        <!-- Section 2: 3D Projection & Camera System -->
+        <h2 class="section-title">2. 3D to 2D Projection Mathematics</h2>
+        <p>The engine converts 3D world coordinates to 2D screen pixels using a perspective projection pipeline. This process involves shifting the world coordinate system to the camera's perspective (View Space) followed by a non-linear projection.</p>
+        
+        <div class="component-block">
+            <h3>2.1 View Transformation</h3>
+            <p>The engine constructs a <b>World-to-Camera (WtoC)</b> matrix using the <i>N, U, V</i> basis vectors:</p>
+            <ul class="technical-list">
+                <li><b>N (Forward):</b> Normalized vector from <code>LookAt</code> to <code>Camera</code>.</li>
+                <li><b>U (Right):</b> Cross product of <code>Up</code> and <code>N</code>.</li>
+                <li><b>V (Up):</b> Cross product of <code>N</code> and <code>U</code>.</li>
+            </ul>
+            <p>The final transformation is the product of a Rotation matrix <code>R</code> and a Translation matrix <code>T</code>: <code>WtoC = R * T</code>.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>2.2 Perspective Projection</h3>
+            <p>Once in Camera Space, the 3D point $(x, y, z)$ is projected using the $z$-coordinate to simulate depth. The logic in <code>Transformation.cpp</code> follows:</p>
+            <pre class="code-box">
+screen_x = (view_x / -view_z + planeWidth / 2) / planeWidth * winWidth
+screen_y = (1 - (view_y / -view_z + planeHeight / 2) / planeHeight) * winHeight
+            </pre>
+            <p>Dividing by $-z$ ensures that objects further away (larger negative $z$) appear smaller and closer to the screen center.</p>
+        </div>
+
+        <!-- Section 3: The Particle Engine & Dynamics -->
+        <h2 class="section-title">3. The Particle Engine & Dynamics</h2>
+        <p>The core simulation engine (<code>Fire.cpp</code>) manages thousands of individual particles to create the rising fire effect. The motion is governed by a combination of thermal buoyancy and stochastic variance.</p>
+        
+        <div class="component-block">
+            <h3>3.1 Rising Motion (Buoyancy)</h3>
+            <p>Particles simulate the upward draft of heat. Each frame, a particle's vertical position is updated based on its intensity <code>i</code>. Brighter, "hotter" particles rise faster, creating a tapered flame shape:</p>
+            <pre class="code-box">vel.y = 20 * particle.intensity; pos = pos + vel;</pre>
+        </div>
+
+        <div class="component-block">
+            <h3>3.2 Sinusoidal Flicker</h3>
+            <p>To mimic the natural "lick" and sway of a flame, the engine applies a horizontal sinusoidal displacement based on the particle's index <code>i</code>. This ensures that the fire doesn't just rise in a straight line but moves with organic turbulence:</p>
+            <pre class="code-box">vel.x = sin(index) * 10 * random_variance;</pre>
+        </div>
+
+        <div class="component-block">
+            <h3>3.3 Intensity Decay & Lifetime</h3>
+            <p>As particles rise, they lose energy. The intensity <code>i</code> is decremented every frame. When <code>i</code> falls below a threshold or the lifetime expires, the particle is recycled. This manages the flame's height and ensures a smooth "fading out" effect at the tip of the fire.</p>
+        </div>
+
+        <!-- Section 4: Gouraud Shading -->
+        <h2 class="section-title">4. Lighting & Gouraud Shading Implementation</h2>
+        <p>To achieve smooth lighting across 3D surfaces like the teapot, the engine implements <b>Gouraud Shading</b>. This method calculates light intensity at vertices and interpolates them across the triangle face.</p>
+        
+        <div class="component-block">
+            <h3>4.1 Normal Averaging</h3>
+            <p>For smooth surfaces, the engine first calculates the face normal for every triangle and then averages them at each vertex to get the <b>Vertex Normal</b>. This prevents "faceted" looks where each triangle is a solid color.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>4.2 Vertex Intensity Calculation</h3>
+            <p>Intensity is calculated using the <b>Lambertian Reflectance</b> model. For each vertex, the engine computes the dot product between the vertex normal and the light vector (provided by the fire particles):</p>
+            <pre class="code-box">Intensity = Normal • (Light_Pos - Vertex_Pos).normalized()</pre>
+            <p>This determines how "bright" each vertex is based on its orientation relative to the fire.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>4.3 Linear Interpolation (The Scanline)</h3>
+            <p>During rasterization (<code>drawSpan</code>), the engine linearly interpolates the intensity values from the three vertices across the entire face, resulting in the smooth color transitions seen in the demo.</p>
+        </div>
+
+        <!-- Section 5: 3D Object Loader -->
+        <h2 class="section-title">5. Custom 3D Object Loader (.obj)</h2>
+        <p>The engine features a hand-written wavefront <code>.obj</code> parser in <code>Object.cpp</code>. This loader is responsible for translating raw geometric data into the engine's internal <code>Object3d</code> structures.</p>
+        
+        <div class="component-block">
+            <h3>5.1 Mesh Parsing & Geometry</h3>
+            <p>The loader parses <code>v</code> (vertices), <code>vn</code> (normals), and <code>f</code> (faces) tokens. It maintains a <b>Vertex Buffer</b> and a <b>Surface Buffer</b>. Because raw .obj files often lack smooth normal data, the engine implements a post-loading <b>Normal Averaging</b> algorithm:</p>
+            <pre class="code-box">Normal_Vertex = Σ(Face_Normals_Connected_to_Vertex) / Count</pre>
+            <p>This allows the <code>Object3d</code> class to provide the smooth vectors required for Gouraud shading.</p>
+        </div>
+
+        <div class="component-block">
+            <h3>5.2 Relationship to Rendering</h3>
+            <p>The loader acts as the bridge between disk assets and the <code>Transformation</code> module. Once loaded, every vertex in the buffer is transformed by the camera matrix and projected to 2D screen space using the Z-buffer logic described previously.</p>
+        </div>
+
+        <!-- Section 6: Fire as a Dynamic Light Source -->
+        <h2 class="section-title">6. Fire Particles as Dynamic Light Sources</h2>
+        <p>One of the most advanced features of the engine is that the fire is not just a visual effect; it acts as a <b>dynamic light source</b> for other 3D objects in the scene.</p>
+        
+        <div class="component-block">
+            <h3>6.1 Particle Sampling</h3>
+            <p>During the <code>render()</code> call of a 3D object, the engine samples the <code>Fire</code> system. Instead of using a single global light, it iterates through a subset of active fire particles to calculate the illumination at each vertex:</p>
+            <pre class="code-box">
+for(fireParticle p : FireSystem) {
+    Vec3 LightDir = (p.pos - vertex.pos).normalized();
+    intensity += vertex.normal • LightDir;
+}
+            </pre>
+        </div>
+
+        <div class="component-block">
+            <h3>6.2 Dynamic Intensity & Flicker</h3>
+            <p>Because fire particles are constantly moving and dying, the light vectors change every frame. This creates a natural <b>flicker effect</b> on the surfaces of the teapot and torch without any hard-coded lighting animations. The intensity is further scaled by the particle's age, ensuring that brighter, "younger" particles contribute more to the scene's illumination.</p>
+        </div>
+
+        <!-- Section 7: Visibility & Z-Buffer Depth Sorting -->
+        <h2 class="section-title">7. Visibility & Z-Buffer Depth Sorting</h2>
+        <p>To correctly handle occlusion (showing which object is in front of another), the engine uses a <b>Z-Buffer</b> (Depth Buffer).</p>
+        
+        <div class="component-block">
+            <h3>7.1 The Depth Test</h3>
+            <p>A 2D array <code>Zbuffer[width * height]</code> stores the $z$-value of the closest pixel rendered at every screen coordinate. During the <code>setpixel</code> call, the engine performs a depth test:</p>
+            <pre class="code-box">
+if (P.z > Zbuffer[x][y]) return; // Current pixel is behind what's already drawn
+else Zbuffer[x][y] = P.z;       // Current pixel is closer, update buffer and draw
+            </pre>
+            <p>This ensures that the teapot doesn't "peek through" the torch if it's actually behind it.</p>
+        </div>
+
+        <!-- Section 8: Visual Demo -->
+        <h2 class="section-title">8. Visual Simulation Demo</h2>
+        <p>The following capture demonstrates the simulator's particle dynamics, Gouraud shading on the teapot, and correct Z-buffer occlusion between the torch and background objects.</p>
+        
+        <div class="demo-container" style="text-align: center; margin-top: 20px;">
+            <img src="https://raw.githubusercontent.com/Pkoiralap/Graphics/master/objects/demo.gif" alt="Fire Simulator Demo" style="max-width: 100%; border-radius: 4px; border: 1px solid #d8d3c5; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+        </div>
+
+        <!-- Section 9: Engineering Specs -->
+        <h2 class="section-title">9. Engineering Specifications</h2>
+        
+        <table class="tech-table">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Implementation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Language</td>
+                    <td><code>C++ (Standard 11+)</code></td>
+                    <td>High-performance systems programming.</td>
+                </tr>
+                <tr>
+                    <td>Rendering API</td>
+                    <td><code>SDL (Simple DirectMedia Layer)</code></td>
+                    <td>Direct pixel buffer access and window management.</td>
+                </tr>
+                <tr>
+                    <td>Projection</td>
+                    <td><code>Perspective WtoC</code></td>
+                    <td>Basis-vector-based camera coordinate transformation.</td>
+                </tr>
+                <tr>
+                    <td>Shading</td>
+                    <td><code>Gouraud (Vertex Normals)</code></td>
+                    <td>Lambertian lighting interpolated across scanlines.</td>
+                </tr>
+                <tr>
+                    <td>Depth Sorting</td>
+                    <td><code>Manual Z-Buffer</code></td>
+                    <td>Software-level depth management for occlusion.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
